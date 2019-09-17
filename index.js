@@ -1,0 +1,37 @@
+const { express } = require('express');
+const { ApolloServer} = require('apollo-server');
+
+// const app = express();
+
+// const schema = gql`
+//   type Query {
+//     me: User
+//   }
+//   type User {
+//     username: String!
+//   }
+// `;
+
+// const resolvers = {
+//   Query: {
+//     me: () => {
+//       return {
+//         username: 'Robin Wieruch',
+//       };
+//     },
+//   },
+// };
+
+// const server = new ApolloServer({
+//   typeDefs: schema,
+//   resolvers,
+// });
+// server.applyMiddleware({ app, path: '/graphql' });
+// app.listen({ port: 8000 }, () => {
+//   console.log('Apollo Server on http://localhost:8000/graphql');
+// });
+const server = new ApolloServer({ typeDefs, resolvers });
+
+server.listen().then(({ url }) => {
+  console.log(`Server ready at ${url}`);
+});
