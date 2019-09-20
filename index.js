@@ -6,19 +6,37 @@ const app = express();
 const schema = gql`
   type Query {
     me: User
+    user(id: ID!): User
+    users: [User!]
   }
   type User {
     username: String!
+    id: ID!
   }
 `;
 
+let users = {
+  1: {
+    id: '1',
+    username: 'Robin Wieruch',
+  },
+  2: {
+    id: '2',
+    username: 'Dave Davids',
+  },
+};
+const me = users[1];
 const resolvers = {
   Query: {
-    me: () => {
-      return {
-        username: 'Robin Wieruch',
-      };
+    user: (parent, { id }) => {
+      return users[id];
     },
+    users: () => {
+      return Object.values(users);
+    },
+    me: () => {
+      return me;
+    }
   },
 };
 
