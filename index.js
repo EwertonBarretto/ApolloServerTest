@@ -1,5 +1,6 @@
 const express = require('express');
 const { ApolloServer, gql} = require('apollo-server-express');
+const uuidv4 = require('uuid/v4');
 
 const app = express();
 
@@ -21,6 +22,10 @@ const schema = gql`
     id: ID!
     text: String!
     user: User!
+  }
+  type Mutation {
+    createMessage(text: String!): Message!
+    deleteMessage(id: ID!): Boolean!
   }
 `;
 
@@ -74,10 +79,33 @@ const resolvers = {
         message => message.userId === user.id,
       );
     },
-  },
+  },  
   Message: {
     user: (message) => {
       return users[message.userId];
+    },
+  },
+  Mutation: {
+    createMessage: (parent, { text }, { me }) => {
+      const id = uuidv4();
+      const message = {
+        id,
+        text,
+        userId: me.id,
+      };
+      messages[id] = message;
+      users[1].messageIds.push(id);
+      //users[me.id].messageIds.push(id);
+
+      return message;
+    },
+    deleteMessage:(parent, {id}) => {
+      const { [id]: message, ...otherMessages } = messages;
+      if (!message) {
+        return false;
+      }
+      messages = otherMessages;
+      return true;
     },
   },
 };
