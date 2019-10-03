@@ -1,28 +1,18 @@
 const { gql } = require('apollo-server-express');
+
 const userSchema = require('./user');
 const messageSchema = require('./message');
 
-module.exports = gql`
+const linkSchema = gql`
   type Query {
-    users: [User!]
-    me: User
-    user(id: ID!): User
-    messages: [Message!]!
-    message(id: ID!): Message!
+    _: Boolean
   }
   type Mutation {
-    createMessage(text: String!): Message!
-    deleteMessage(id: ID!): Boolean!
+    _: Boolean
   }
-  type User {
-    id: ID!
-    username: String!
-    messages: [Message!]
-  }
-  type Message {
-    id: ID!
-    text: String!
-    user: User!
+  type Subscription {
+    _: Boolean
   }
 `;
 
+module.exports = [linkSchema, userSchema, messageSchema];
