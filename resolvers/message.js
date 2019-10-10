@@ -1,4 +1,4 @@
-const {users, messages} = require('../model');
+const {users, messages} = require('../models');
 const uuidv4 = require('uuid/v4');
 
 const resolvers = {
