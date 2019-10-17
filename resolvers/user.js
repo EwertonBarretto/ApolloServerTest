@@ -1,22 +1,23 @@
-const {users, messages} = require('../models');
-
 const resolvers = {
-    Query: {
-      users: () => {
-        return Object.values(users);
-      },
-      user: (parent, { id }) => {
-        return users[id];
-      },
-      me: (parent, args, { me }) => {
-        return me;
-      },
-    },  
-    User: {
-      messages: user => {
-        return Object.values(messages).filter(
-          message => message.userId === user.id,
-        );
+  Query: {
+    users: async (parent, args, { models }) => {
+      return await models.User.findAll();
+    },
+    user: async (parent, { id }, { models }) => {
+      return await models.User.findById(id);
+    },
+    me: async (parent, args, { models, me }) => {
+      return await models.User.findById(me.id);
+    },
+  },
+
+  User: {
+    messages: async (user, args, { models }) => {
+      return await models.Message.findAll({
+        where: {
+          userId: user.id,
+          },
+        });
       },
     },
   };
