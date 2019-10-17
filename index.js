@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');
+require('dotenv').config();
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 
@@ -7,6 +7,8 @@ const resolvers = require('./resolvers');
 const {models, sequelize } = require('./models');
 
 const app = express();
+
+const Sequelize = require('sequelize');
 
 //app.use(cors());
 
@@ -22,8 +24,34 @@ const server = new ApolloServer({
 server.applyMiddleware({ app, path: '/graphql' });
 
 const eraseDatabaseOnSync = true;
+//console.log(sequelize.sync({ force: eraseDatabaseOnSync }));
+
+/*
+Inicio
+
+var connection = new Sequelize(
+  process.env.DATABASE,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASSWORD,
+  {
+    dialect: 'postgres',
+  },
+);
+var conexao = connection.authenticate()
+.then(function(){
+   console.log('Conexão com o MySQL foi estabelecida com sucesso');
+})
+.catch(function (err) {
+  console.log('Não foi possível se conectar com o banco de dados MySql: - ' + err);
+})
+.done();
+
+
+fim
+*/
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+  console.log('chegou aqui');
   if (eraseDatabaseOnSync) {
     createUsersWithMessages();
   }
